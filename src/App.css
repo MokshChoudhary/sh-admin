@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.active{
+  text-decoration-line: underline;
+  color :var(--primary-button-color);
+}
+
+#root {
+  padding: 0px;
+  margin: 0px;
+}
+

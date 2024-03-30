@@ -1,0 +1,60 @@
+/* Tailwind CSS Dark Theme Color Variables */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    /* Brightness */
+    --brightness-dark: #000000;
+  
+    /* Primary */
+    --color-primary: #FFB95F;
+    --color-on-primary: #472A00;
+    --color-primary-container: #653E00;
+    --color-on-primary-container: #FFDDB8;
+  
+    /* Secondary */
+    --color-secondary: #4FD8EB;
+    --color-on-secondary: #00363D;
+    --color-secondary-container: #004F58;
+    --color-on-secondary-container: #97F0FF;
+  
+    /* Tertiary */
+    --color-tertiary: #4FD8EB;
+    --color-on-tertiary: #00363D;
+    --color-tertiary-container: #004F58;
+    --color-on-tertiary-container: #97F0FF;
+  
+    /* Error */
+    --color-error: #FFB4AB;
+    --color-error-container: #93000A;
+    --color-on-error: #690005;
+    --color-on-error-container: #FFDAD6;
+  
+    /* Background */
+    --color-background: #001F25;
+    --color-on-background: #A6EEFF;
+  
+    /* Surface */
+    --color-surface: #001F25;
+    --color-on-surface: #A6EEFF;
+    --color-surface-variant: #504539;
+    --color-on-surface-variant: #D4C4B5;
+  
+    /* Outline */
+    --color-outline: #9C8E80;
+  
+    /* On Inverse Surface */
+    --color-on-inverse-surface: #001F25;
+    --color-inverse-surface: #A6EEFF;
+  
+    /* Inverse Primary */
+    --color-inverse-primary: #855300;
+  
+    /* Shadow */
+    --color-shadow: #000000;
+  
+    /* Surface Tint */
+    --color-surface-tint: #FFB95F;
+  }
+  
