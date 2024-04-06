@@ -18,7 +18,6 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
-import { HashRouter, Route } from 'react-router-dom';
 import AddUser from './screens/AddUserScreen';
 
 const drawerWidth = 240;
@@ -75,6 +74,8 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 export default function HomePage() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const queryParams = new URLSearchParams(window.location.search);
+
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -150,12 +151,9 @@ export default function HomePage() {
       </Drawer>
       <Main open={open}>
         <DrawerHeader />
-            
-           
 
-                
-            
-        
+        {queryParams.get('screen') == "add_user" ? <AddUser /> : "opps"}
+
       </Main>
     </Box>
   );
