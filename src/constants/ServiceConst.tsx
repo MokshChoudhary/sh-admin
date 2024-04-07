@@ -4,6 +4,8 @@ class ServiceConstants {
 
     public login:string = this.url + "/admin/login";
     public addUser:string = this.url + "/admin/addUser";
+    public getUsers:string = this.url + "/admin/getUsers";
+    public getMeta:string = this.url + "/get/meta";
 }
 
 export default ServiceConstants;

@@ -19,7 +19,7 @@ type Prop = {
 
 }
 
-class AddUser extends Component<Prop, State> {
+class AddSubject extends Component<Prop, State> {
 
     constants: ServiceConstants;
 
@@ -53,7 +53,7 @@ class AddUser extends Component<Prop, State> {
             method: "post",
             url: this.constants.getMeta,
             data: {
-                "tableName": "user_type_meta"
+                "tableName": "subject_data"
             }
         })
             .then(response => {
@@ -101,8 +101,7 @@ class AddUser extends Component<Prop, State> {
 
         const columns: GridColDef[] = [
             { field: 'uuid', headerName: 'ID', width: 90 },
-            { field: 'username', headerName: 'User Name', width: 90 },
-            { field: 'type', headerName: 'Type', width: 90 }
+            { field: 'subjectname', headerName: 'Subject Name', width: 90 },
         ];
         return (
             <Dialog
@@ -112,7 +111,7 @@ class AddUser extends Component<Prop, State> {
                 onClose={this.handleClose}
                 aria-describedby="alert-dialog-slide-description"
             >
-                <DialogTitle>{"User Table Data"}</DialogTitle>
+                <DialogTitle>{"Subject Table Data"}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-slide-description">
                         <DataGrid
@@ -131,10 +130,8 @@ class AddUser extends Component<Prop, State> {
 
     render() {
         var formData: [string, any][] = [
-            ["userName", "User Name"],
-            ["password", "Password"],
-            ["rpassword", "Re-enterPassword"],
-            ["type", this.state.typeList],
+            ["uuid", "UUId"],
+            ["subject", "Subject Name"],
         ];
 
 
@@ -173,4 +170,4 @@ class AddUser extends Component<Prop, State> {
     }
 }
 
-export default AddUser;
+export default AddSubject;

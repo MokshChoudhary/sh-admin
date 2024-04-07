@@ -16,9 +16,11 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
+import SubjectIcon from '@mui/icons-material/Subject';
+
 import AddUser from './screens/AddUserScreen';
+import UserIcon from '@mui/icons-material/Person4Rounded'
+import AddSubject from './screens/AddSubjectScreen';
 
 const drawerWidth = 240;
 
@@ -71,11 +73,30 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
 }));
 
+const getIcon = (index:number)=>{
+  switch(index)
+  {
+    case 0: 
+    return <UserIcon/>
+    case 1:
+      return <SubjectIcon/>
+  } 
+}
+
+
 export default function HomePage() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const queryParams = new URLSearchParams(window.location.search);
 
+  const handleChangeParam = () => {
+    queryParams.set('screen','add_subject');
+    const newURL = `${window.location.pathname}?${queryParams.toString()}`;
+    window.history.replaceState(null, '', newURL);
+
+    window.location.reload();
+    console.log(window.location);
+  };
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -85,7 +106,7 @@ export default function HomePage() {
     setOpen(false);
   };
 
-  return (
+ return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
@@ -124,11 +145,11 @@ export default function HomePage() {
         </DrawerHeader>
         <Divider />
         <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem key={text} disablePadding>
+          {['AddUser', 'AddSubject'].map((text, index) => (
+            <ListItem key={text} onClick={handleChangeParam} disablePadding>
               <ListItemButton>
                 <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  { getIcon(index) }
                 </ListItemIcon>
                 <ListItemText primary={text} />
               </ListItemButton>
@@ -141,7 +162,7 @@ export default function HomePage() {
             <ListItem key={text} disablePadding>
               <ListItemButton>
                 <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  {index % 2 === 0 ? <UserIcon /> : <SubjectIcon />}
                 </ListItemIcon>
                 <ListItemText primary={text} />
               </ListItemButton>
@@ -151,9 +172,9 @@ export default function HomePage() {
       </Drawer>
       <Main open={open}>
         <DrawerHeader />
-
-        {queryParams.get('screen') == "add_user" ? <AddUser /> : "opps"}
-
+          {}
+        {queryParams.get('screen') == "add_user" && <AddUser /> }
+        {queryParams.get('screen') == "add_subject" && <AddSubject /> }
       </Main>
     </Box>
   );
