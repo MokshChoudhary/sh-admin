@@ -19,7 +19,7 @@ type Prop = {
 
 }
 
-class AddSubject extends Component<Prop, State> {
+class AddClass extends Component<Prop, State> {
 
     constants: ServiceConstants;
 
@@ -51,7 +51,7 @@ class AddSubject extends Component<Prop, State> {
 
         axios({
             method: "post",
-            url: this.constants.getSubjects,
+            url: this.constants.getClasses,
         })
             .then(response => {
                 if (response.status == 200) {
@@ -75,8 +75,8 @@ class AddSubject extends Component<Prop, State> {
     userDetails() {
 
         const columns: GridColDef[] = [
-            { field: 'subject_id', headerName: 'ID' },
-            { field: 'subject_name', headerName: 'Subject Name' },
+            { field: 'class_id', headerName: 'ID', width: 100 },
+            { field: 'class_name', headerName: 'Class Name', width: 100 },
         ];
         return (
             <Dialog
@@ -89,7 +89,7 @@ class AddSubject extends Component<Prop, State> {
                 <DialogContent>
                     <DialogContentText id="alert-dialog-slide-description">
                         <DataGrid
-                            getRowId={(row) => row.subject_id}
+                            getRowId={(row) => row.class_id}
                             rows={this.state.rowData}
                             columns={columns} />
                     </DialogContentText>
@@ -104,8 +104,8 @@ class AddSubject extends Component<Prop, State> {
 
     render() {
         var formData: [string, any][] = [
-            ["subject_id", "UUId"],
-            ["subject_name", "Subject Name"],
+            ["class_id", "UUId"],
+            ["class_name", "Class Name"],
         ];
 
 
@@ -115,11 +115,11 @@ class AddSubject extends Component<Prop, State> {
                 {!this.state.isLoading &&
                     <div className="relative">
                         <Card className="absolute transform -translate-x-1/2 left-1/2 w-[50%] p-2">
-                            <Form formName="Add Subject" data={formData} positiveButtonHandler={(data: any) => {
+                            <Form formName="Add Class" data={formData} positiveButtonHandler={(data: any) => {
                                 console.log(data);
                                     axios({
                                         method: "post",
-                                        url: this.constants.addSubject,
+                                        url: this.constants.addClass,
                                         data: data
                                     })
                                         .then(response => {
@@ -144,4 +144,4 @@ class AddSubject extends Component<Prop, State> {
     }
 }
 
-export default AddSubject;
+export default AddClass;

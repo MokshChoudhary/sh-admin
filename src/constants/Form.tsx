@@ -8,6 +8,8 @@ export type formProp = {
     negitiveButtonHandler?: any;
 }
 
+
+
 class Form extends Component<formProp> {
     constructor(prop: formProp) {
         super(prop)

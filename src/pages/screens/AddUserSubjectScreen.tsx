@@ -1,25 +1,26 @@
-import { Component } from "react";
+import { Component, useEffect } from "react";
 import axios from "axios";
 import ServiceConstants from "../../constants/ServiceConst";
-import { Button, Card, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Slide } from "@mui/material";
+import { Box, Button, Card, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Slide } from "@mui/material";
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Form from "../../constants/Form";
 import { TransitionProps } from "@mui/material/transitions";
 import React from "react";
 
 type State = {
-
     rowData: any;
-    isLoading: boolean;
-    typeList: [string, string][];
+    isUserLoaded: boolean;
+    isSubjectLoaded: boolean;
+    userList: [string, string][];
+    subjectList: [string, string][];
     open: boolean;
 }
 
 type Prop = {
-
+    formName: String
 }
 
-class AddUser extends Component<Prop, State> {
+class AddUserSubject extends Component<Prop, State> {
 
     constants: ServiceConstants;
 
@@ -32,11 +33,14 @@ class AddUser extends Component<Prop, State> {
         this.constants = new ServiceConstants();
         this.state = {
             rowData: null,
-            isLoading: true,
-            typeList: [][0],
+            isUserLoaded: false,
+            isSubjectLoaded: false,
+            userList: [][0],
+            subjectList: [][0],
             open: false
         }
-        this.getTypeList();
+        this.getUserList();
+        this.getSubjectList();
         this.init();
         this.Transition = React.forwardRef(function Transition(
             props: TransitionProps & {
@@ -48,12 +52,12 @@ class AddUser extends Component<Prop, State> {
         });
     }
 
-    getTypeList() {
+    getUserList() {
         axios({
             method: "post",
             url: this.constants.getMeta,
             data: {
-                "tableName": "user_type_meta"
+                "tableName": "user_data"
             }
         })
             .then(response => {
@@ -61,9 +65,32 @@ class AddUser extends Component<Prop, State> {
                     console.log(response.data.data);
                     var combo: [string, string][] = [];
                     for (var d in response.data.data) {
-                        combo.push([response.data.data[d].type, response.data.data[d].name])
+                        combo.push([response.data.data[d].user_id, response.data.data[d].username])
                     }
-                    this.setState({ typeList: combo });
+                    this.setState({ userList: combo , isUserLoaded : true});
+                }
+            })
+            .catch(err => {
+                console.log(err);
+
+            })
+    }
+    getSubjectList() {
+        axios({
+            method: "post",
+            url: this.constants.getMeta,
+            data: {
+                "tableName": "subject_data"
+            }
+        })
+            .then(response => {
+                if (response.status == 200) {
+                    console.log(response.data.data);
+                    var combo: [string, string][] = [];
+                    for (var d in response.data.data) {
+                        combo.push([response.data.data[d].subject_id, response.data.data[d].subject_name])
+                    }
+                    this.setState({ subjectList: combo, isSubjectLoaded : true});
                 }
             })
             .catch(err => {
@@ -76,12 +103,12 @@ class AddUser extends Component<Prop, State> {
 
         axios({
             method: "post",
-            url: this.constants.getUsers,
+            url: this.constants.getUserSubject,
         })
             .then(response => {
                 if (response.status == 200) {
                     console.log(response.data.data);
-                    this.setState({ rowData: response.data.data, isLoading: false });
+                    this.setState({ rowData: response.data.data });
                 }
             })
             .catch(err => {
@@ -100,24 +127,24 @@ class AddUser extends Component<Prop, State> {
     userDetails() {
 
         const columns: GridColDef[] = [
-            { field: 'userId', headerName: 'ID', width: 90 },
-            { field: 'username', headerName: 'User Name', width: 90 },
-            { field: 'type', headerName: 'Type', width: 90 },
-            { field: 'password', headerName: 'Password', width: 90 }
+            { field: 'uuid', headerName: 'ID', width: 90 },
+            { field: 'subjectId', headerName: 'Subject Id', width: 90 },
+            { field: 'userId', headerName: 'User Id', width: 90 }
         ];
         return (
-            <Dialog
+            <>
+            {Array.from(this.state.rowData).length > 0 ? <Dialog
                 open={this.state.open}
                 TransitionComponent={this.Transition}
                 keepMounted
                 onClose={this.handleClose}
                 aria-describedby="alert-dialog-slide-description"
             >
-                <DialogTitle>{"User Table Data"}</DialogTitle>
+                <DialogTitle>{this.props.formName+" Table"}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-slide-description">
                         <DataGrid
-                            getRowId={(row) => row.userId}
+                            getRowId={(row) => row.uuid}
                             rows={this.state.rowData}
                             columns={columns} />
                     </DialogContentText>
@@ -126,37 +153,57 @@ class AddUser extends Component<Prop, State> {
                     <Button onClick={this.handleClose}>Ok</Button>
                 </DialogActions>
             </Dialog>
+            :
+            <Dialog
+                open={this.state.open}
+                TransitionComponent={this.Transition}
+                keepMounted
+                onClose={this.handleClose}
+                aria-describedby="alert-dialog-slide-description"
+            >
+                <DialogTitle>{this.props.formName+" Table"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-slide-description">
+                        Data is empty
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={this.handleClose}>Ok</Button>
+                </DialogActions>
+            </Dialog>}
+            </>
 
         );
     }
 
     render() {
         var formData: [string, any][] = [
-            ["userName", "User Name"],
-            ["password", "Password"],
-            ["rpassword", "Re-enterPassword"],
-            ["type", this.state.typeList],
+            ["userId", this.state.userList],
+            ["subjectId", this.state.subjectList],
         ];
 
 
         return (
             <>
-                {this.state.isLoading && <p>Data is being loaded..</p>}
-                {!this.state.isLoading &&
+                {!(this.state.isSubjectLoaded && this.state.isUserLoaded) && <p>Data is being loaded..</p>}
+                {(this.state.isSubjectLoaded && this.state.isUserLoaded) &&
                     <div className="relative">
                         <Card className="absolute transform -translate-x-1/2 left-1/2 w-[50%] p-2">
-                            <Form formName="Add User" data={formData} positiveButtonHandler={(data: any) => {
+                            <Form formName={"Add "+this.props.formName} data={formData} positiveButtonHandler={(data: any) => {
                                 console.log(data);
-                                if (data['password'] == data['rpassword'])
+                                var requestBody = {
+                                    "subjectId":data.get("subjectId"),
+                                    "userId":data.get("userId")
+                                }
                                     axios({
                                         method: "post",
-                                        url: this.constants.addUser,
-                                        data: data
+                                        url: this.constants.addUserSubject,
+                                        data: requestBody,
                                     })
                                         .then(response => {
                                             if (response.status == 200) {
                                                 console.log(response.data);
-                                               this.init();
+                                                this.init()
                                             }
                                         })
                                         .catch(err => {
@@ -175,4 +222,4 @@ class AddUser extends Component<Prop, State> {
     }
 }
 
-export default AddUser;
+export default AddUserSubject;

@@ -20,7 +20,12 @@ import SubjectIcon from '@mui/icons-material/Subject';
 
 import AddUser from './screens/AddUserScreen';
 import UserIcon from '@mui/icons-material/Person4Rounded'
+import ClassIcon from '@mui/icons-material/ClassOutlined'
 import AddSubject from './screens/AddSubjectScreen';
+import AddClass from './screens/AddClassScreen';
+import AddUserSubject from './screens/AddUserSubjectScreen';
+import AddClassSubject from './screens/AddClassSubjectScreen';
+import AddUserClass from './screens/AddUserClassScreen';
 
 const drawerWidth = 240;
 
@@ -77,9 +82,11 @@ const getIcon = (index:number)=>{
   switch(index)
   {
     case 0: 
-    return <UserIcon/>
+      return <UserIcon/>
     case 1:
       return <SubjectIcon/>
+    case 2:
+      return <ClassIcon/>
   } 
 }
 
@@ -89,8 +96,42 @@ export default function HomePage() {
   const [open, setOpen] = React.useState(false);
   const queryParams = new URLSearchParams(window.location.search);
 
-  const handleChangeParam = () => {
-    queryParams.set('screen','add_subject');
+  const handleChangeParam = (index:number) => {
+    switch(index){
+      case 0:
+        queryParams.set('screen','add_user');
+        break;
+      case 1:
+        queryParams.set('screen','add_subject');
+        break;
+      case 2:
+      queryParams.set('screen','add_class');
+      break;
+
+    }
+
+    
+    const newURL = `${window.location.pathname}?${queryParams.toString()}`;
+    window.history.replaceState(null, '', newURL);
+
+    window.location.reload();
+    console.log(window.location);
+  };
+
+  const handleChangeMapperParam = (index:number) => {
+    switch(index){
+      case 0:
+        queryParams.set('screen','add_user_subject');
+        break;
+      case 1:
+        queryParams.set('screen','add_class_subject');
+        break;
+      case 2:
+        queryParams.set('screen','add_user_class');
+        break;
+    }
+
+    
     const newURL = `${window.location.pathname}?${queryParams.toString()}`;
     window.history.replaceState(null, '', newURL);
 
@@ -145,8 +186,8 @@ export default function HomePage() {
         </DrawerHeader>
         <Divider />
         <List>
-          {['AddUser', 'AddSubject'].map((text, index) => (
-            <ListItem key={text} onClick={handleChangeParam} disablePadding>
+          {['Add User', 'Add Subject',"Add Class"].map((text, index) => (
+            <ListItem key={text} onClick={()=>handleChangeParam(index)} disablePadding>
               <ListItemButton>
                 <ListItemIcon>
                   { getIcon(index) }
@@ -158,8 +199,8 @@ export default function HomePage() {
         </List>
         <Divider />
         <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem key={text} disablePadding>
+          {['User Subject Mapper','Class Subject Mapper','User Class Mapper'].map((text, index) => (
+            <ListItem key={text} disablePadding onClick={()=>handleChangeMapperParam(index)}>
               <ListItemButton>
                 <ListItemIcon>
                   {index % 2 === 0 ? <UserIcon /> : <SubjectIcon />}
@@ -175,6 +216,10 @@ export default function HomePage() {
           {}
         {queryParams.get('screen') == "add_user" && <AddUser /> }
         {queryParams.get('screen') == "add_subject" && <AddSubject /> }
+        {queryParams.get('screen') == "add_class" && <AddClass /> }
+        {queryParams.get('screen') == "add_user_subject" && <AddUserSubject formName={"User Subject"} /> }
+        {queryParams.get('screen') == "add_class_subject" && <AddClassSubject /> }
+        {queryParams.get('screen') == "add_user_class" && <AddUserClass /> }
       </Main>
     </Box>
   );
